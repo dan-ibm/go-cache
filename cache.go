@@ -28,6 +28,10 @@ func (c MapCache) Get(key string) (interface{}, error) {
 	return c.cache[key], nil
 }
 
-func (c *MapCache) Delete(key string) {
+func (c *MapCache) Delete(key string) error {
+	if _, ok := c.cache[key]; !ok {
+		return errors.New("cannot delete, key not found")
+	}
 	delete(c.cache, key)
+	return nil
 }

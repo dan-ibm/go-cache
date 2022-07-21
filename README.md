@@ -19,20 +19,23 @@ func main() {
 
 	mapCache.Set("userId", 42)
 	userId, err := mapCache.Get("userId")
+
 	if err != nil {
 		fmt.Println(err)
 	} else {
 		fmt.Println(userId)
 	}
 
-	mapCache.Delete("userId")
+	if err = mapCache.Delete("userId"); err != nil {
+		fmt.Println(err)
+	}
 	if userId, err = mapCache.Get("userId"); err != nil {
 		fmt.Println(err)
 	} else {
 		fmt.Println(userId)
 	}
-
 }
+
 ```
 
 

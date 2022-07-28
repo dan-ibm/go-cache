@@ -13,23 +13,24 @@ type Cache interface {
 
 type MapCache struct {
 	cache map[string]interface{}
-	sync.RWMutex
+	mu    sync.RWMutex
 }
 
 func New() *MapCache {
 	return &MapCache{
 		cache: make(map[string]interface{}),
+		mu:    sync.RWMutex{},
 	}
 }
 func (c *MapCache) Set(key string, value interface{}) {
-	c.Lock()
+	c.mu.Lock()
 	c.cache[key] = value
-	c.Unlock()
+	c.mu.Unlock()
 }
 
 func (c *MapCache) Get(key string) (interface{}, error) {
-	c.RLock()
-	defer c.RUnlock()
+	c.mu.RLock()
+	defer c.mu.RUnlock()
 	if _, ok := c.cache[key]; !ok {
 		return nil, errors.New("not found")
 	}
@@ -37,8 +38,8 @@ func (c *MapCache) Get(key string) (interface{}, error) {
 }
 
 func (c *MapCache) Delete(key string) error {
-	c.Lock()
-	defer c.Unlock()
+	c.mu.Lock()
+	defer c.mu.Unlock()
 	if _, ok := c.cache[key]; !ok {
 		return errors.New("cannot delete, key not found")
 	}

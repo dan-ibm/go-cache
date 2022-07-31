@@ -12,12 +12,17 @@ package main
 import (
 	"fmt"
 	"github.com/dan-ibm/go-cache"
+	"time"
 )
 
 func main() {
 	mapCache := cache.New()
 
-	mapCache.Set("userId", 42)
+
+	// You can omit duration argument, by default, its 10 seconds (cache.DefaultDuration)
+	mapCache.Set("userId", 42, time.Second * 5)
+	// You can change time sleep value, to check if expiration works
+	time.Sleep(time.Second * 3)
 	userId, err := mapCache.Get("userId")
 
 	if err != nil {
@@ -35,7 +40,6 @@ func main() {
 		fmt.Println(userId)
 	}
 }
-
 ```
 
 
